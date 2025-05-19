@@ -79,7 +79,7 @@ Passos
  # 🛢️ Banco de Dados
 
 O projeto utiliza o **H2 Database**, que roda em memória.
-A console web do H2 pode ser acessada (se configurada no `application.properties`) por:
+A console web do H2 pode ser acessada (se configurada no `application.properties ou em um arquivo .yml`) por:
 
 ```
 http://localhost:8080/h2-console
