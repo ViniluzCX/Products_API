@@ -21,13 +21,11 @@ public class ProdutoControllerHttp {
     }
 
     @PostMapping
-    public ResponseEntity<String> salvar(@RequestBody Produto produto) {
-        System.out.println("Produto recebido: " + produto);
+    public Produto salvar(@RequestBody Produto produto) {
         var id = UUID.randomUUID().toString();
         produto.setId(id);
         produtoRepository.save(produto);
-        String message = "Produto: " + produto.getNome() + " salvo com sucesso!";
-        return ResponseEntity.ok(message);
+        return produto;
 
 
     }
@@ -52,16 +50,28 @@ public class ProdutoControllerHttp {
         if (produtoOpt.isPresent()) {
             Produto produto = produtoOpt.get();
             produtoRepository.deleteById(id);
-            String mensagem = "O produto " + produto.getNome() + " id: " + id + " foi deletado com sucesso!";
+            String mensagem = "O produto " + produto.getNome() + "\nid: " + id + " foi deletado com sucesso!";
             return ResponseEntity.ok(mensagem);
         } else {
             return ResponseEntity.status(404).body("Produto não encontrado.");
         }
     }
 
+    //@GetMapping
+    //public List<Produto> listarProdutos() {
+    // return produtoRepository.findAll();}
     @GetMapping
-    public List<Produto> listarProdutos() {
-
-        return produtoRepository.findAll();
+    public List<Produto> buscar(@RequestParam("nome") String nome){
+        return produtoRepository.findByNome(nome);
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<String> atualizar(@PathVariable("id") String id, @RequestBody Produto produto) {
+
+        produto.setId(id);
+        produtoRepository.save(produto);
+        String message = "Produto atualizado com sucesso!";
+        return ResponseEntity.ok(message);
+    }
+
 }
