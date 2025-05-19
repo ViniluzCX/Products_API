@@ -25,6 +25,7 @@ public class Produto {
     @Column(name = "preco")
     private String preco;
 
+
     public String getId() {
         return id;
     }

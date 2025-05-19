@@ -3,8 +3,10 @@ package io.github.ViniluzCX.produtosapi.controller;
 
 import io.github.ViniluzCX.produtosapi.model.Produto;
 import io.github.ViniluzCX.produtosapi.repository.ProdutoRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,16 +21,47 @@ public class ProdutoControllerHttp {
     }
 
     @PostMapping
-    public Produto salvar(@RequestBody Produto produto) {
+    public ResponseEntity<String> salvar(@RequestBody Produto produto) {
         System.out.println("Produto recebido: " + produto);
         var id = UUID.randomUUID().toString();
         produto.setId(id);
-
         produtoRepository.save(produto);
-        return produto;
+        String message = "Produto: " + produto.getNome() + " salvo com sucesso!";
+        return ResponseEntity.ok(message);
+
+
     }
+
     @GetMapping("/{id}")
-    public Produto obterPorId(@PathVariable("id") String id){
-        return produtoRepository.findById(id).orElse( null);
-    };
+    public ResponseEntity<?> obterPorId(@PathVariable("id") String id) {
+        Optional<Produto> produtoOpt = produtoRepository.findById(id);
+
+        if (produtoOpt.isPresent()) {
+            Produto produto = produtoOpt.get();
+            return ResponseEntity.ok(produto);
+        } else {
+            String message = "Produto não encontrado.";
+            return ResponseEntity.status(404).body(message);
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deletar(@PathVariable("id") String id) {
+        Optional<Produto> produtoOpt = produtoRepository.findById(id);
+
+        if (produtoOpt.isPresent()) {
+            Produto produto = produtoOpt.get();
+            produtoRepository.deleteById(id);
+            String mensagem = "O produto " + produto.getNome() + " id: " + id + " foi deletado com sucesso!";
+            return ResponseEntity.ok(mensagem);
+        } else {
+            return ResponseEntity.status(404).body("Produto não encontrado.");
+        }
+    }
+
+    @GetMapping
+    public List<Produto> listarProdutos() {
+
+        return produtoRepository.findAll();
+    }
 }
