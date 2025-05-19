@@ -51,7 +51,7 @@ A API permite:
 Passos
 
 1. Clone este repositório:
-   ```bash
+   ```
    git clone https://github.com/seu-usuario/produtosapi.git
    cd produtosapi
 ````
